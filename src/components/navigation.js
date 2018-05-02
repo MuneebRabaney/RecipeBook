@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-native'
 import { Text, View, FlatList, SectionList } from 'react-native'
 import { DrawerNavigator, StackNavigator } from 'react-navigation'
-import styled from 'styled-components/native'
 import { connect } from 'react-redux'
+import styled from 'styled-components/native'
 import NavigationAction from '../controllers/actions/'
-import { Link } from 'react-router-native'
 
 const Menu = styled.View`
   padding: 80px 50px;

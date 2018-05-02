@@ -1,7 +1,7 @@
-import RecipeScreen from './single'
-import RecipesScreen  from './list'
+import Recipe from './single'
+import Recipes  from './list'
 
 export {
-  RecipeScreen, // single view
-  RecipesScreen // list view
+  Recipe, // single view
+  Recipes // list view
 }

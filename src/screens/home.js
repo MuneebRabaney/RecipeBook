@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
 import { View, Text, Button } from 'react-native'
+import styled from 'styled-components/native'
 
-class HomeScreen extends Component {
-
+const Container = styled.View`
+  flex: 1; 
+  align-items: center; 
+  justify-content: center;
+`
+class Home extends Component {
   render() {    
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Container>
         <Text>Home Screen</Text>
-      </View>
+      </Container>
     )
   }
 }
 
-export default HomeScreen
+export default Home

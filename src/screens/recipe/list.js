@@ -11,7 +11,7 @@ import { Container } from '../../components/ui'
 import { Rms, Themosis } from '../../lib/api/'
 import { Link } from 'react-router-native'
 
-class RecipesScreen extends Component {
+class Recipes extends Component {
 
   state = {
     isLoading: true,
@@ -55,7 +55,7 @@ class RecipesScreen extends Component {
             <View key={index} style={{ paddingBottom: 20 }}>
               <Link 
                 to={{
-                  pathname: `/recipe/${id}`,
+                  pathname: `/recipes/${id}`,
                   state: { id }
                 }}
                 underlayColor="transparent">
@@ -78,4 +78,4 @@ class RecipesScreen extends Component {
   }
 }
 
-export default RecipesScreen
+export default Recipes

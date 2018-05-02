@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import Navigation from './components/navigation'
-import { NativeRouter as Router, Route, Link } from 'react-router-native'
-
-import HomeScreen from './screens/home'
-import { RecipesScreen, RecipeScreen } from './screens/recipe'
+import { MemoryRouter as Router, Route, Link } from 'react-router-native'
+import { 
+  Home,
+  Recipe,
+  Recipes
+} from './screens'
 
 class Main extends Component {
   render() {
@@ -11,9 +13,9 @@ class Main extends Component {
       <Router>
         <Fragment>
           <Navigation />
-          <Route exact path='/' component={HomeScreen} />
-          <Route exact path='/recipes' component={RecipesScreen} />
-          <Route exact path='/recipe/:id' component={RecipeScreen} />
+          <Route exact path='/' component={Home} />
+          <Route exact path='/recipes' component={Recipes} />
+          <Route exact path='/recipes/:id' component={Recipe} />
         </Fragment>
       </Router>
     )

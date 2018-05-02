@@ -32,7 +32,6 @@ function configureStore(initialState = {}) {
 const store = configureStore()
 class App extends Component {
   render() {
-    // console.log(store.getState())
     return (
       <Provider store={store}>
         <Main />
