@@ -77,7 +77,6 @@ class Api {
   * @return: Object
   **/ 
   static async request(route = null, { params = {} }, { method = '' }, single = false) {
-    
     Console.message({
       type: 'log',
       title: 'Is Single',
@@ -86,7 +85,7 @@ class Api {
     
     let uri = `${this.endpoint}${route ? `/${route}` : ''}`
     let endpoint = this.modifyApiQueryEndpoint(uri, params)
-    console.log(single)
+    
     // Modifiy the endpoint if its a single object being called
     // from an ID. example {category}/{ID}
     // This is for the RMS API but needs to have a cleaner solution

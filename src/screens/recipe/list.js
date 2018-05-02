@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
-import { ScrollView, ActivityIndicator, Text, View, Image, Asset } from 'react-native'
+import { 
+  Text, 
+  View, 
+  Image, 
+  Asset, 
+  ScrollView, 
+  ActivityIndicator } from 'react-native'
 import Loading from '../../components/loading' 
 import { Container } from '../../components/ui' 
 import { Rms, Themosis } from '../../lib/api/'
+import { Link } from 'react-router-native'
 
 class RecipesScreen extends Component {
 
@@ -11,38 +18,31 @@ class RecipesScreen extends Component {
     data: null
   }
 
-  async componentDidMount() {
-    let data = await Rms.get({
+  componentDidMount() {
+
+    Rms.get({
       route: 'recipes',
       params: {
         limit: 5
       } 
     })
-    if (data) {
+    .then(result => {
       let state = Object.assign({}, this.state)
-      state.data = data
+      state.data = result
       state.isLoading = false
       this.setState(state)
-    }
-
-    let content = await Themosis.post({
+    })
+    
+    // this is just a test to see if 
+    // we able to pass and pull data 
+    // from the Themosis CMS
+    // NOTE: console logs happen in the 
+    // API blueprint class
+    Themosis.post({
       params: {
         action: 'fetchContent',
         id: 5
-      } 
-    })
-
-    if (content) {
-      console.log(content)
-    }
-  }
-
-  _handlePageLink(id, event) {
-    let { navigation } = this.props
-    return navigation.navigate('Recipe', {
-      id: id,
-      routeFrom: '/recipes',
-      data: 'just passing by'
+      }
     })
   }
 
@@ -51,13 +51,20 @@ class RecipesScreen extends Component {
     return (
       <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
         <ScrollView style={{ flex: 1, padding: 20 }}> 
-        { recipes.map(({ id, title }, index) => (
-          <View key={index} style={{ paddingBottom: 20 }}>
-            <Text onPress={this._handlePageLink.bind(this, {id: id})}>
-              { title.trim() }
-            </Text>
-          </View>
-        )) } 
+          { recipes.map(({ id, title }, index) => (
+            <View key={index} style={{ paddingBottom: 20 }}>
+              <Link 
+                to={{
+                  pathname: `/recipe/${id}`,
+                  state: { id }
+                }}
+                underlayColor="transparent">
+                <Text>
+                  {title.trim()}
+                </Text>
+              </Link>
+            </View>
+          )) } 
         </ScrollView>
       </View>
     )

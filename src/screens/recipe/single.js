@@ -1,8 +1,20 @@
 import React, { Component } from 'react'
-import { ScrollView, ActivityIndicator, Text, View, Image, Asset, Button } from 'react-native'
+import { ScrollView, ActivityIndicator, Text, View, Image, Asset } from 'react-native'
 import Loading from '../../components/loading'
 import { Container } from '../../components/ui'
 import { Rms } from '../../lib/api'
+import { Link } from 'react-router-native'
+import styled from 'styled-components/native'
+
+const Button = styled.Text`
+  ${({ back }) => back && `
+    margin: 40px 20px 0 0;
+    width: 30px;
+    align-self: flex-start;
+    position: relative;
+  `}
+  
+`
 
 class RecipeScreen extends Component {
 
@@ -11,30 +23,22 @@ class RecipeScreen extends Component {
     data: null
   }
 
-  async componentDidMount() {
-    let { id } = this.props.navigation.state.params 
-    let data = await Rms.get({
+  componentDidMount() {
+    Rms.get({
       route: 'recipes',
-      params: {
-        ...id
-      } 
-    }, { single: true })
-    if (data) {
+      ...this.props.match
+    }, { 
+      single: true 
+    })
+    .then(result => {
       let state = Object.assign({}, this.state)
-      state.data = data
+      state.data = result
       state.isLoading = false
       this.setState(state)
-    }
-  }
-
-  _handleGoBack({ navigation }, { data }, event) {
-    return navigation.navigate('Recipes', {
-      routeFrom: '/recipe',
-      data: data
     })
   }
 
-  _layout(data) {
+  _layout({ data }) {
     let { 
       title,
       cover_image, 
@@ -43,11 +47,9 @@ class RecipeScreen extends Component {
     } = data
     return (
       <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
-        <Button
-          back
-          title='&larr;'
-          onPress={this._handleGoBack.bind(this, this.props, this.state)}
-        />
+        <Link underlayColor="transparent" to='/recipes'>
+          <Button>&larr;</Button>
+        </Link>
         <ScrollView style={{ flex: 1, padding: 20 }}>
           <View style={{ paddingBottom: 20 }}>
             <Text>{title.trim()}</Text>
@@ -66,7 +68,7 @@ class RecipeScreen extends Component {
 
   render() {
     if (!this.state.isLoading) {
-      return <Container render={() => this._layout(this.state.data)} /> 
+      return <Container render={() => this._layout(this.state)} /> 
     }
     return <Loading isLoading={this.state.isLoading} />
   }
