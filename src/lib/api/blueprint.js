@@ -1,30 +1,11 @@
-import Config from 'react-native-config'
-import Console from './console-debug'
+import Console from '../console-debug'
 /**
-* Class for making calls to the API
+* Factory base class for the API
 *  
 * @return: Class
-* @creater: Muneeb Rabaney
+* @author: Muneeb Rabaney
 **/
 class Api {
-  // Default members
-  static token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE0NzQzODQ0MjYsImp0aSI6IjBVXC82eXg0Ykd6Y0RmTEZcL2xhTWxIeXZWSzhHVmVXUE12QUdWZnN2eTVIZz0iLCJpc3MiOiJsaXF1b3JpY2UtYXBpIiwibmJmIjoxNDc0Mzg0NDI2LCJleHAiOjE2MzIwNjQ0MjYsImRhdGEiOnsidHlwZSI6InN1YnNjcmliZXIiLCJpZCI6MX19.nnVF_ZMgymswctRFq7vyDb_HCAE1CAykQQ1HirZGAMFy4OLnFbinsVm5dTjbbTn_NkGAIirNil3KJ3HvJT2PaA'
-  static endpoint = 'https://rms.knorrwhatsfordinner.co.za/api/v1'
-
-  /**
-  * sets a Getter for the headers 
-  * neerded by the API
-  *  
-  * @return: Object
-  **/
-  static get headers() {
-    return { 
-      headers : {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.token}`,
-      }
-    }
-  }
 
   /**
   * Performs a GET request
@@ -34,17 +15,25 @@ class Api {
   *  
   * @return: Object
   **/
-  static async get(route = null, params = {}, { single } = false) {
+  static async get({ route = null, params = {} }, { single } = false) {
+    Console.message({
+      type: 'log',
+      title: 'Performing GET request',
+      result: params
+    })
+
     try {
-      if (route) {
-        let {
-          data,
-          success
-        } = await this.request(route, { params }, { method: 'GET' }, single)
-        if (success) return data
-      }
+      let {
+        data,
+        success
+      } = await this.request(route, { params }, { method: 'GET' }, single)
+      if (success) return data
     } catch (error) {
-      console.error(error)
+      Console.message({
+        type: 'error',
+        title: 'Failed to perform GET request',
+        result: error
+      })
     }
   }
 
@@ -56,7 +45,7 @@ class Api {
   *  
   * @return: Object
   **/
-  static async post(route = null, params = {}, { single } = false) {
+  static async post({ route = null, params = {} }, { single } = false) {
     Console.message({
       type: 'log',
       title: 'Performing POST request',
@@ -64,15 +53,17 @@ class Api {
     })
 
     try {
-      if (route) {
-        let {
-          data,
-          success
-        } = await this.request(route, { params }, { method: 'POST' }, single)
-        if (success) return data
-      }
+      let {
+        data,
+        success
+      } = await this.request(route, { params }, { method: 'POST' }, single)
+      if (success) return data
     } catch (error) {
-      console.error(error)
+      Console.message({
+        type: 'error',
+        title: 'Failed to perform POST request',
+        result: error
+      })
     }
   }
   
@@ -85,15 +76,22 @@ class Api {
   *  
   * @return: Object
   **/ 
-  static async request(route, { params }, { method }, single = false) {
+  static async request(route = null, { params = {} }, { method = '' }, single = false) {
+    
     Console.message({
+      type: 'log',
       title: 'Is Single',
       result: single
     })
     
-    const uri = `${this.endpoint}/${route}`
+    let uri = `${this.endpoint}${route ? `/${route}` : ''}`
     let endpoint = this.modifyApiQueryEndpoint(uri, params)
+    console.log(single)
+    // Modifiy the endpoint if its a single object being called
+    // from an ID. example {category}/{ID}
+    // This is for the RMS API but needs to have a cleaner solution
     if (single) endpoint = `${uri}/${params.id}`
+    
     let response = await fetch(endpoint, { ...this.headers, method })
     let result = await response.json()
     

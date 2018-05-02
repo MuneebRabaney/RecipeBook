@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, ActivityIndicator, Text, View, Image, Asset, Button } from 'react-native'
 import Loading from '../../components/loading'
 import { Container } from '../../components/ui'
-import Api from '../../lib/api'
+import { Rms } from '../../lib/api'
 
 class RecipeScreen extends Component {
 
@@ -13,7 +13,12 @@ class RecipeScreen extends Component {
 
   async componentDidMount() {
     let { id } = this.props.navigation.state.params 
-    let data = await Api.get('recipes', {...id}, { single: true })
+    let data = await Rms.get({
+      route: 'recipes',
+      params: {
+        ...id
+      } 
+    }, { single: true })
     if (data) {
       let state = Object.assign({}, this.state)
       state.data = data
@@ -40,7 +45,7 @@ class RecipeScreen extends Component {
       <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
         <Button
           back
-          title='back'
+          title='&larr;'
           onPress={this._handleGoBack.bind(this, this.props, this.state)}
         />
         <ScrollView style={{ flex: 1, padding: 20 }}>

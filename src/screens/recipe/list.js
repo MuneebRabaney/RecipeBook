@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, ActivityIndicator, Text, View, Image, Asset } from 'react-native'
 import Loading from '../../components/loading' 
 import { Container } from '../../components/ui' 
-import Api from '../../lib/api'
+import { Rms, Themosis } from '../../lib/api/'
 
 class RecipesScreen extends Component {
 
@@ -12,12 +12,28 @@ class RecipesScreen extends Component {
   }
 
   async componentDidMount() {
-    let data = await Api.get('recipes', { limit: 5 })
+    let data = await Rms.get({
+      route: 'recipes',
+      params: {
+        limit: 5
+      } 
+    })
     if (data) {
       let state = Object.assign({}, this.state)
       state.data = data
       state.isLoading = false
       this.setState(state)
+    }
+
+    let content = await Themosis.post({
+      params: {
+        action: 'fetchContent',
+        id: 5
+      } 
+    })
+
+    if (content) {
+      console.log(content)
     }
   }
 
