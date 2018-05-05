@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-native'
+import styled from 'styled-components/native'
+import React, { Component, Fragment } from 'react'
 import { Text, View, FlatList, SectionList } from 'react-native'
 import { DrawerNavigator, StackNavigator } from 'react-navigation'
-import { connect } from 'react-redux'
-import styled from 'styled-components/native'
-import NavigationAction from '../controllers/actions/'
+import { navigationActions as action } from '../controllers/actions'
 
 const Menu = styled.View`
   padding: 80px 50px;
@@ -16,14 +16,10 @@ const Menu = styled.View`
   height: 100%;
   top: 0;
   bottom: 0;
-  ${({ menu }) => {
-    switch (menu) {
-      case 'opened': 
-        return `right: 0;`
-      default:
-        return `right: 100%;`
-    }
-  }}
+  right: 100%;
+  ${({ open }) => open && `
+    right: 0;
+  `}
 `
 
 const Button = styled.TouchableOpacity`
@@ -45,12 +41,16 @@ const Line = styled.Text`
 class Navigation extends Component {
   
   state = {
-    active: false
+    open: false
   }
-
+  
   _toggleNavigation() {
+    let { props } = this
+    let { 
+      payload 
+    } = !this.state.open ? props.open() : props.close()
     let state = Object.assign({}, this.state)
-    state.active = !this.state.active 
+    state = payload
     this.setState(state)
   }
   
@@ -59,7 +59,8 @@ class Navigation extends Component {
     let linkStyle = {
       marginBottom: 10,
     }
-    return (
+
+    return (  
       <Fragment>
         <Button
           onPress={this._toggleNavigation.bind(this)}>
@@ -67,7 +68,7 @@ class Navigation extends Component {
           <Line fill={70} />
         </Button>
         <Menu
-          menu={this.state.active ? 'opened' : 'closed'}>
+          open={this.state.open}>
           <Link 
             to='/'
             underlayColor="transparent"
@@ -89,12 +90,13 @@ class Navigation extends Component {
   
 }
 
-function mapStateToProps(state) {
-  return {
-    state: state.navigation,
-  }
-}
+const mapStateToProps = ({ navigation }) => navigation
+const mapDispatchToProps = dispatch => ({
+  open: () => dispatch(action.open()),
+  close: () => dispatch(action.close()),
+})
 
-let DecoratedModal = Navigation
-DecoratedModal = connect(mapStateToProps, { NavigationAction })(DecoratedModal)
-export default DecoratedModal
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Navigation)

@@ -1,23 +1,21 @@
 // Action Types
-class NavigationAction {
-  static OPEN = 'OPEN'
-  static CLOSE = 'CLOSE'
+const OPEN = 'OPEN'
+const CLOSE = 'CLOSE'
 
-  static open() {
-    return {
-      type: this.OPEN
+export function open() {
+  return {
+    type: OPEN,
+    payload: {
+      open: true
     }
-  }
-
-  static close() {
-    return {
-      type: this.CLOSE
-    }
-  }
-
-  static toggle({ active }) {
-    return active ? this.open() : this.close()
   }
 }
 
-export default NavigationAction
+export function close() {
+  return {
+    type: CLOSE,
+    payload: {
+      open: false
+    }
+  }
+}

@@ -1,24 +1,27 @@
-import { combineReducers } from 'redux'
+import * as actions from '../../actions/'
 
-export const OPEN = 'OPEN'
-export const CLOSE = 'CLOSE'
+const initialState = {
+  state: {}
+}
 
-const open = () => {
-  return {
-    type: OPEN,
+const navigation = (state = initialState, { type, payload = async () => await payload }) => {
+  if (typeof type !== 'undefined') {
+    // console.log(payload)
+    switch (type) {
+      case actions.OPEN:
+        return {
+          state,
+          ...payload
+        }
+      case actions.CLOSE:
+        return {
+          state,
+          ...payload
+        }
+      default:
+        return state
+    }
   }
 }
 
-const close = () => {
-  return {
-    type: '',
-  }
-}
-
-const reducer = combineReducers({
-  open, 
-  close,
-})
-
-export default reducer
-
+export default navigation

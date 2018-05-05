@@ -89,6 +89,7 @@ class Recipes extends Component {
 }
 
 const mapStateToProps = ({ recipes }) => recipes
+
 const mapDispatchToProps = dispatch => ({
   fetch: {
     recipes: (params = null) => {
