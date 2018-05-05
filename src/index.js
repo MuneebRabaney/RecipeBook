@@ -8,12 +8,18 @@ import {
 } from './screens'
 
 class Main extends Component {
+  
+  constructor(props) {
+    super(props)
+  }
+
   render() {
+    let { store } = this.props
     return (
       <Router>
         <Fragment>
           <Navigation />
-          <Route exact path='/' component={Home} />
+          <Route exact path='/' component={Home}/>
           <Route exact path='/recipes' component={Recipes} />
           <Route exact path='/recipes/:id' component={Recipe} />
         </Fragment>

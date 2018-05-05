@@ -10,6 +10,9 @@ import Loading from '../../components/loading'
 import { Container } from '../../components/ui' 
 import { Rms, Themosis } from '../../lib/api/'
 import { Link } from 'react-router-native'
+import { connect } from 'react-redux'
+import { recipeActions as action } from '../../controllers/actions'
+
 
 class Recipes extends Component {
 
@@ -18,32 +21,42 @@ class Recipes extends Component {
     data: null
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    console.log('nextprops', nextProps)
+  }
 
-    Rms.get({
+  componentWillMount() {
+    let { payload } = this.props.fetch.recipes({
       route: 'recipes',
       params: {
-        limit: 5
-      } 
+        limit: 15
+      }
     })
-    .then(result => {
+    payload.then(result => {
       let state = Object.assign({}, this.state)
       state.data = result
       state.isLoading = false
       this.setState(state)
     })
-    
+
     // this is just a test to see if 
     // we able to pass and pull data 
     // from the Themosis CMS
     // NOTE: console logs happen in the 
     // API blueprint class
-    Themosis.post({
-      params: {
-        action: 'fetchContent',
-        id: 5
-      }
-    })
+    // Themosis.post({
+    //   params: {
+    //     action: 'fetchContent',
+    //     id: 5
+    //   }
+    // })
+  }
+
+  _handleLinkOnClick(id, event) {
+    let { data } = this.state
+    let { history } = this.props
+    let url = `/recipes/${id}`
+    return history.push(url, data)
   }
 
   _layout(data) {
@@ -53,11 +66,8 @@ class Recipes extends Component {
         <ScrollView style={{ flex: 1, padding: 20 }}> 
           { recipes.map(({ id, title }, index) => (
             <View key={index} style={{ paddingBottom: 20 }}>
-              <Link 
-                to={{
-                  pathname: `/recipes/${id}`,
-                  state: { id }
-                }}
+              <Link
+                onPress={this._handleLinkOnClick.bind(this, id)} 
                 underlayColor="transparent">
                 <Text>
                   {title.trim()}
@@ -78,4 +88,16 @@ class Recipes extends Component {
   }
 }
 
-export default Recipes
+const mapStateToProps = ({ recipes }) => recipes
+const mapDispatchToProps = dispatch => ({
+  fetch: {
+    recipes: (params = null) => {
+      return dispatch(action.fetchRecipes(params))
+    },
+  }
+})
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(Recipes)

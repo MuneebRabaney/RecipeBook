@@ -1,9 +1,9 @@
-// import RecipeAction from './recipe/action'
-import NavigationAction from './navigation/action'
+import * as recipeActions from './recipe/action'
+// import NavigationAction from './navigation/action'
 // import AnimationAction from './animation/action'
 
 export {
-  // RecipeAction,
-  NavigationAction,
+  recipeActions,
+  // NavigationAction,
   // AnimationAction,
 }
