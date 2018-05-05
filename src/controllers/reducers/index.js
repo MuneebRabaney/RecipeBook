@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
-// import * as RecipeReducer from './recipes/reducer'
+import recipes from './recipes/reducer'
 // import * as AnimationReducer from './animation/reducer'
-import * as NavigationReducer from './navigation/reducer'
+// import * as NavigationReducer from './navigation/reducer'
 
 const reducers = combineReducers({
-  // RecipeReducer,
+  recipes,
   // AnimationReducer,
-  NavigationReducer
+  // NavigationReducer
 })
 
 export default reducers

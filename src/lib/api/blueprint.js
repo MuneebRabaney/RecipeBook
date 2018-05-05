@@ -18,7 +18,7 @@ class Api {
   static async get({ route = null, params = {} }, { single } = false) {
     Console.message({
       type: 'log',
-      title: 'Performing GET request',
+      title: `Performing GET request ${params && 'with the below parameters'}`,
       result: params
     })
 
@@ -31,7 +31,7 @@ class Api {
     } catch (error) {
       Console.message({
         type: 'error',
-        title: 'Failed to perform GET request',
+        title: `Failed to perform GET request`,
         result: error
       })
     }
@@ -48,7 +48,7 @@ class Api {
   static async post({ route = null, params = {} }, { single } = false) {
     Console.message({
       type: 'log',
-      title: 'Performing POST request',
+      title: `Performing POST request ${params && 'with the below parameters'}`,
       result: params
     })
 
@@ -61,7 +61,7 @@ class Api {
     } catch (error) {
       Console.message({
         type: 'error',
-        title: 'Failed to perform POST request',
+        title: `Failed to perform POST request`,
         result: error
       })
     }
@@ -79,8 +79,8 @@ class Api {
   static async request(route = null, { params = {} }, { method = '' }, single = false) {
     Console.message({
       type: 'log',
-      title: 'Is Single',
-      result: single
+      title: 'Is this a single result set that we need returned from the request?',
+      result: single ? 'Yes' : 'No'
     })
     
     let uri = `${this.endpoint}${route ? `/${route}` : ''}`
@@ -96,12 +96,12 @@ class Api {
     
     Console.message({
       type: 'log',
-      title: 'Requested Endpoint',
+      title: 'Requested endpoint below',
       result: endpoint
     })
     Console.message({
       type: 'log',
-      title: 'Endpoint Response',
+      title: 'Endpoint responed with',
       result: result
     })
 

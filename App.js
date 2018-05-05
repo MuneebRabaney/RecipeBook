@@ -12,29 +12,28 @@ import { createLogger } from 'redux-logger'
 
 import Navigation from './src/components/navigation'
 import Main from './src/'
-import reducer from './src/controllers/reducers/navigation/reducer'
+import reducers from './src/controllers/reducers/'
 
 const loggerMiddleware = createLogger({
   predicate: (getState, action) => __DEV__
 })
 
 function configureStore(initialState = {}) {
-  // console.log(process)
   const enchancer = compose(
     applyMiddleware(
       thunkMiddleware,
       loggerMiddleware
     ),
   )
-  return createStore(reducer, initialState, enchancer)
+  return createStore(reducers, initialState, enchancer)
 }
 
-const store = configureStore()
+const store = configureStore({})
 class App extends Component {
-  render() {
+  render() { 
     return (
       <Provider store={store}>
-        <Main />
+        <Main store={store} />
       </Provider>
     )
   }
