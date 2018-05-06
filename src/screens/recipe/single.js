@@ -4,7 +4,11 @@ import {
   View, 
   Image, 
   Asset,
+  Easing,
+  Animated,
+  Dimensions,
   ScrollView, 
+  SectionList,
   ActivityIndicator
 } from 'react-native' 
 import Loading from '../../components/loading'
@@ -27,11 +31,51 @@ const Button = ({ title }) => {
   return <Blueprint>{title}</Blueprint>
 }
 
+const { width, height } = Dimensions.get('window')
+
 class Recipe extends Component {
 
   state = {
     isLoading: true,
     data: null,
+  }
+
+  constructor(props) {
+    super(props)
+    this.animation = {
+      image: {
+        top: new Animated.Value(0),
+        scale: new Animated.Value(0)
+      },
+      ingredient: {
+        underline: new Animated.Value(0)
+      }
+    }
+  }
+
+  _handleImageAnimation() {
+    let { image, ingredient } = this.animation
+    image.scale.setValue(0)
+    image.top.setValue(0)
+    ingredient.underline.setValue(0)
+
+    Animated.parallel([
+      Animated.timing(image.scale, {
+        toValue: 1,
+        duration: 1600,
+        easing: Easing.linear(),
+      }),
+      Animated.timing(image.top, {
+        toValue: 0,
+        duration: 1700,
+        easing: Easing.back(),
+      }),
+      Animated.timing(ingredient.underline, {
+        toValue: width,
+        duration: 1700,
+        easing: Easing.back(),
+      }),
+    ]).start()
   }
 
   componentWillMount() {
@@ -46,6 +90,7 @@ class Recipe extends Component {
       state.isLoading = false
       this.setState(state)
     })
+    this._handleImageAnimation()
   }
 
   _layout({ data }) {
@@ -55,8 +100,12 @@ class Recipe extends Component {
       cover_image, 
       description, 
       serves,
+      ingredients
     } = data
-  
+    let {
+      image,
+      ingredient
+    } = this.animation
     return (
       <Fragment>
         <Link style={{ zIndex: 2 }} underlayColor="transparent" to='/recipes'>
@@ -64,22 +113,98 @@ class Recipe extends Component {
         </Link>
         {
           cover_image.thumb_uri &&
-          <Image
-            style={{ 
-              width: '100%', 
-              height: 200, 
-              zIndex: 1, 
-              marginTop: -30, 
-              marginBottom: -20 
-            }}
+          <Animated.Image
+            style={[
+              { 
+                position: 'relative',
+                width: '100%',
+                height: 250,  
+                zIndex: 1,  
+                marginBottom: -40,
+                top: -30,
+                transform: [
+                  { scale: .1 }
+                ]
+              }, { 
+                transform: [
+                  {
+                    translateY: image.top.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 1]
+                    }) 
+                  },
+                  {
+                    scale: image.scale.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 1]
+                    }), 
+                  },
+                  { perspective: 1000 }
+                ]
+              }
+            ]}
             source={{ uri: `https:${cover_image.thumb_uri}` }} />
         }
         <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
           <ScrollView style={{ flex: 1, padding: 20 }}>
             <View style={{ paddingBottom: 20 }}>
-              <Text>{title.trim()}</Text>
+              <Text style={{
+                fontSize: 20,
+                marginBottom: 20
+              }}>{title.trim()}</Text>
               <Text>{description.trim()}</Text>
-              Fla
+              { 
+                ingredients && 
+                <Fragment>
+                  <Text style={{
+                    marginTop: 20,
+                    fontSize: 17,
+                  }}>Ingredients:</Text>
+                  <SectionList
+                    style={{
+                      marginBottom: 20,
+                      marginTop: 20,
+                      marginRight: 10,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    }}
+                    renderItem={({ item, index, section }) => (
+                      <Fragment>
+                        <Text
+                          key={index}
+                          style={{
+                            paddingBottom: 7,
+                          }}>
+                          {item}
+                        </Text>
+                        <Animated.View 
+                          style={[
+                            {
+                              width: 0,
+                              height: 1,
+                              backgroundColor: '#00000030',
+                              marginBottom: 10,
+                            },
+                            {
+                              width: ingredient.underline
+                            }
+                          ]}
+                        />   
+                      </Fragment>   
+                      
+                    )}
+                    sections={
+                      ingredients.map(({ name, ingredient }) => ({
+                        ...{
+                          title: name.trim(),
+                          data: [ingredient.trim()]
+                        }
+                      }))
+                    }
+                    keyExtractor={(item, index) => item + index}
+                  />
+                </Fragment>
+              }
               <Text>Serves: {serves}</Text>
             </View>
           </ScrollView>
