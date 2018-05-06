@@ -5,13 +5,13 @@ const initialState = {
   state: {}
 }
 
-const recipes = (state = initialState, { type, payload }) => {
-  
+const recipes = (state = initialState, { type, payload = async () => await payload }) => {
+  // console.log(payload)
   if (typeof type !== 'undefined') {
     switch (type) {
       case actions.FETCH_RECIPES:
         return {
-          state,
+          ...state,
           payload,
           isLoading: false
         }

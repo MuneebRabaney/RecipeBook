@@ -4,19 +4,18 @@ const initialState = {
   state: {}
 }
 
-const navigation = (state = initialState, { type, payload = async () => await payload }) => {
+const navigation = (state = initialState, { type, payload }) => {
   if (typeof type !== 'undefined') {
-    // console.log(payload)
     switch (type) {
       case actions.OPEN:
         return {
-          state,
-          ...payload
+          payload,
+          ...state
         }
       case actions.CLOSE:
         return {
-          state,
-          ...payload
+          payload,
+          ...state
         }
       default:
         return state

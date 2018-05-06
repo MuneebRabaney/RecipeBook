@@ -21,11 +21,7 @@ class Recipes extends Component {
     data: null
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('nextprops', nextProps)
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     let { payload } = this.props.fetch.recipes({
       route: 'recipes',
       params: {
@@ -51,7 +47,7 @@ class Recipes extends Component {
     //   }
     // })
   }
-
+  
   _handleLinkOnClick(id, event) {
     let { data } = this.state
     let { history } = this.props

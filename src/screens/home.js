@@ -67,14 +67,12 @@ class Home extends Component {
     let { animatedBlock, state } = this
     let { speed } = state.animation
     animatedBlock.setValue(0);
-    Animated.timing(
-      animatedBlock,
-      {
-        toValue: 1,
-        duration: speed.medium,
-        easing: Easing.linear
-      }
-    ).start(() =>
+    Animated.timing(animatedBlock, {
+      toValue: 1,
+      duration: speed.fast,
+      easing: Easing.linear
+    })
+    .start(() =>
       // on animation complete
       this._handleAnimationCompleted()
     )

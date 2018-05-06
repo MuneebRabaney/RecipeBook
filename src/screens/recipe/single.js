@@ -17,11 +17,12 @@ import { recipeActions as action } from '../../controllers/actions'
 
 const Button = ({ title }) => {
   const Blueprint = styled.Text`
-    margin: -20px 20px 0 20px;
-    width: 30px;
+    top: -23px;
+    left: 15px;
+    width: 60px;
     align-self: flex-start;
-    position: relative;
-    font-size: 20px;
+    position: absolute;
+    font-size: 30px;
   `
   return <Blueprint>{title}</Blueprint>
 }
@@ -33,23 +34,7 @@ class Recipe extends Component {
     data: null,
   }
 
-  static getDerrivedStateFromProps(nextProps) {
-    console.log('nextprops', nextProps)
-  }
-
-  constructor(props) {
-    super(props)
-  }
-
   componentWillMount() {
-    // @TODO: Move this into redux
-    // Rms.get({ route: 'recipes', ...this.props.match }, { single: true })
-    // .then(result => {
-    //   let state = Object.assign({}, this.state)
-    //   state.data = result
-    //   state.isLoading = false
-    //   this.setState(state)
-    // })
     let { id } = this.props.match.params
     let { payload } = this.props.fetch.recipe({
       route: 'recipes',
@@ -64,7 +49,7 @@ class Recipe extends Component {
   }
 
   _layout({ data }) {
-    
+    console.log(data)
     let { 
       title,
       cover_image, 
@@ -74,21 +59,27 @@ class Recipe extends Component {
   
     return (
       <Fragment>
-        <Link underlayColor="transparent" to='/recipes'>
+        <Link style={{ zIndex: 2 }} underlayColor="transparent" to='/recipes'>
           <Button title='&larr;' />
         </Link>
+        {
+          cover_image.thumb_uri &&
+          <Image
+            style={{ 
+              width: '100%', 
+              height: 200, 
+              zIndex: 1, 
+              marginTop: -30, 
+              marginBottom: -20 
+            }}
+            source={{ uri: `https:${cover_image.thumb_uri}` }} />
+        }
         <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
           <ScrollView style={{ flex: 1, padding: 20 }}>
             <View style={{ paddingBottom: 20 }}>
-              {<Text>{title}</Text>}
-              {
-                cover_image.thumb_uri && (
-                <Image
-                  style={{ width: '100%', height: 150 }}
-                  source={{ uri: `https:${cover_image.thumb_uri}` }} />
-                )
-              }
+              <Text>{title.trim()}</Text>
               <Text>{description.trim()}</Text>
+              Fla
               <Text>Serves: {serves}</Text>
             </View>
           </ScrollView>

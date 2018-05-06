@@ -16,11 +16,11 @@ class Api {
   * @return: Object
   **/
   static async get({ route = null, params = {} }, { single } = false) {
-    Console.message({
-      type: 'log',
-      title: `Performing GET request ${params && 'with the below parameters'}`,
-      result: params
-    })
+    // Console.message({
+    //   type: 'log',
+    //   title: `Performing GET request ${params && 'with the below parameters'}`,
+    //   result: params
+    // })
 
     try {
       let {
@@ -29,11 +29,11 @@ class Api {
       } = await this.request(route, { params }, { method: 'GET' }, single)
       if (success) return data
     } catch (error) {
-      Console.message({
-        type: 'error',
-        title: `Failed to perform GET request`,
-        result: error
-      })
+      // Console.message({
+      //   type: 'error',
+      //   title: `Failed to perform GET request`,
+      //   result: error
+      // })
     }
   }
 
@@ -46,11 +46,11 @@ class Api {
   * @return: Object
   **/
   static async post({ route = null, params = {} }, { single } = false) {
-    Console.message({
-      type: 'log',
-      title: `Performing POST request ${params && 'with the below parameters'}`,
-      result: params
-    })
+    // Console.message({
+    //   type: 'log',
+    //   title: `Performing POST request ${params && 'with the below parameters'}`,
+    //   result: params
+    // })
 
     try {
       let {
@@ -59,11 +59,11 @@ class Api {
       } = await this.request(route, { params }, { method: 'POST' }, single)
       if (success) return data
     } catch (error) {
-      Console.message({
-        type: 'error',
-        title: `Failed to perform POST request`,
-        result: error
-      })
+      // Console.message({
+      //   type: 'error',
+      //   title: `Failed to perform POST request`,
+      //   result: error
+      // })
     }
   }
   
@@ -77,11 +77,11 @@ class Api {
   * @return: Object
   **/ 
   static async request(route = null, { params = {} }, { method = '' }, single = false) {
-    Console.message({
-      type: 'log',
-      title: 'Is this a single result set that we need returned from the request?',
-      result: single ? 'Yes' : 'No'
-    })
+    // Console.message({
+    //   type: 'log',
+    //   title: 'Is this a single result set that we need returned from the request?',
+    //   result: single ? 'Yes' : 'No'
+    // })
     
     let uri = `${this.endpoint}${route ? `/${route}` : ''}`
     let endpoint = this.modifyApiQueryEndpoint(uri, params)
@@ -94,16 +94,16 @@ class Api {
     let response = await fetch(endpoint, { ...this.headers, method })
     let result = await response.json()
     
-    Console.message({
-      type: 'log',
-      title: 'Requested endpoint below',
-      result: endpoint
-    })
-    Console.message({
-      type: 'log',
-      title: 'Endpoint responed with',
-      result: result
-    })
+    // Console.message({
+    //   type: 'log',
+    //   title: 'Requested endpoint below',
+    //   result: endpoint
+    // })
+    // Console.message({
+    //   type: 'log',
+    //   title: 'Endpoint responed with',
+    //   result: result
+    // })
 
     return result
   }
