@@ -1,7 +1,9 @@
 import styled from 'styled-components/native'
-import { Dimensions } from 'react-native'
+import { Animated, Dimensions } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
+
+let Text = Animated.Text
 
 let menu = {
   paddingTop: 110,
@@ -9,7 +11,7 @@ let menu = {
   paddingRight: 50,
   paddingLeft: 50,
   position: 'absolute',
-  zIndex: 2,
+  zIndex: 3,
   backgroundColor: '#000000',
   flex: 1,
   width: '85%',
@@ -27,7 +29,7 @@ let menu2 = {
   paddingRight: 50,
   paddingLeft: 50,
   position: 'absolute',
-  zIndex: 1,
+  zIndex: 2,
   backgroundColor: '#ffffff',
   flex: 1,
   width: '100%',
@@ -56,11 +58,16 @@ const flipedText = {
 }
 
 const Button = styled.TouchableOpacity`
-  margin: 40px 20px 0 0;
-  width: 30px;
+  ${'' /* margin: 40px 20px 0 0; */}
+  top: 35px;
+  right: 0px;
+  width: 70px;
+  height: 50px;
   align-self: flex-end;
   position: relative;
-  z-index: 3;
+  z-index: 4;
+  display: flex;
+  padding: 15px;
 `
 
 const Line = styled.Text`
@@ -74,10 +81,24 @@ const Line = styled.Text`
   ${({ fill }) => fill && `width: ${fill}%;`}
 `
 
+let buttonLine = {
+  // position: 'relative',
+  top: 0,
+  zIndex: 10,
+  height: 2,
+  backgroundColor: '#000000',
+  marginBottom: 5,
+  alignSelf: 'flex-end',
+  transform: [
+    { rotateZ: '0deg' }
+  ]
+}
+
 export {
   menu,
   menu2,
   Line,
+  buttonLine,
   Button,
   flipedText,
 }

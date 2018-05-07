@@ -21,7 +21,17 @@ class Recipes extends Component {
     data: null
   }
 
+  _diffStoreAgainstLocalState({ store, local }) {
+    return store.filter(item => local.includes(item))
+  }
+
   componentDidMount() {
+    // if (this.props.state.payload) {
+    //   let { payload } = this.props.state
+    //   payload.then(({ recipes }) => {
+    //     console.log(recipes, this.state.data.recipes)
+    //   })
+    // }
     let { payload } = this.props.fetch.recipes({
       route: 'recipes',
       params: {
@@ -29,9 +39,12 @@ class Recipes extends Component {
       }
     })
     payload.then(result => {
+      let { isLoading } = this.props.state
       let state = Object.assign({}, this.state)
+      // let { isLoading } = this.props.recipes
+      // console.log(this.props.state)
+      state.isLoading = isLoading
       state.data = result
-      state.isLoading = false
       this.setState(state)
     })
 
@@ -58,7 +71,7 @@ class Recipes extends Component {
   _layout(data) {
     let { recipes } = data
     return (
-      <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
+      <View style={{ flex: 1, paddingTop: '20%', paddingBottom: 20 }}>
         <ScrollView style={{ flex: 1, padding: 20 }}> 
           { recipes.map(({ id, title }, index) => (
             <View key={index} style={{ paddingBottom: 20 }}>
@@ -84,7 +97,7 @@ class Recipes extends Component {
   }
 }
 
-const mapStateToProps = ({ recipes }) => recipes
+const mapStateToProps = ({ recipes }) => ({ state: recipes })
 
 const mapDispatchToProps = dispatch => ({
   fetch: {

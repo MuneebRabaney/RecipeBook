@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Link } from 'react-router-native'
-import { menu2, menu, Line, Button, flipedText } from './styles'
+import { menu2, menu, buttonLine, Button, flipedText } from './styles'
 import React, { Component, Fragment } from 'react'
 import { DrawerNavigator, StackNavigator } from 'react-navigation'
 import { navigationActions as action } from '../../controllers/actions'
@@ -34,6 +34,11 @@ class Navigation extends Component {
         second: new Animated.Value(width),
       },
       active: new Animated.Value(0),
+      button: {
+        color: new Animated.Value(0),
+        width: new Animated.Value(0),
+        rotate: new Animated.Value(0),
+      }
     }
   }
 
@@ -44,7 +49,7 @@ class Navigation extends Component {
   }
 
   componentDidUpdate(nextProps, nextState) {
-    if (this.state.open) {
+    if (nextState.active === this.state.active && this.state.open) {
       this.animateMenuIn()
     } else {
       this.animateMenuOut()
@@ -53,7 +58,7 @@ class Navigation extends Component {
   
   _toggleNavigation({ title }) {
     let { props } = this
-    // console.log(props)
+    console.log(title)
     let { 
       payload 
     } = !this.state.open ? props.open() : props.close()
@@ -67,59 +72,98 @@ class Navigation extends Component {
   }
 
   animateMenuIn() {
-    let { block, active } = this.animatedMenu
+    let { block, active, button } = this.animatedMenu
     let { open, animation } = this.state
-    Animated.sequence([
-      Animated.timing(block.first, {
-        toValue: width / width * 95.0,
-        duration: animation.speed.medium,
+    // console.log(button.rotate)
+    Animated.parallel([
+      Animated.timing(button.color, {
+        toValue: 1,
+        duration: animation.speed.slow,
+        easing: Easing.linear(),
       }),
-      Animated.parallel([
-        Animated.spring(block.second, {
-          damping: 8,
-          mass: .8,
-          toValue: !open ? width : 0,
+      Animated.timing(button.width, {
+        toValue: 1,
+        // damping: 5,
+        // mass: .8,
+        duration: animation.speed.slow,
+        easing: Easing.linear(),
+      }),
+      Animated.timing(button.rotate, {
+        toValue: 1,
+        duration: animation.speed.slow,
+        easing: Easing.linear(),
+      }),
+      Animated.sequence([
+        Animated.timing(block.first, {
+          toValue: width / width * 95.0,
           duration: animation.speed.medium,
         }),
-        Animated.spring(active, {
-          damping: 8,
-          mass: .8,
-          toValue: width / 2,
-          duration: animation.speed.medium,
-        })
+        Animated.parallel([
+          Animated.spring(block.second, {
+            damping: 8,
+            mass: .8,
+            toValue: !open ? width : 0,
+            duration: animation.speed.medium,
+          }),
+          Animated.spring(active, {
+            damping: 8,
+            mass: .8,
+            toValue: 1,
+            duration: animation.speed.medium,
+          })
+        ])
       ])
     ])
     .start()
   }
 
   animateMenuOut() {
-    let { block, active } = this.animatedMenu
+    let { block, active, button } = this.animatedMenu
     let { open, animation } = this.state
     Animated.sequence([
-      Animated.timing(active, {
-        toValue: - (width / 2),
-        easing: Easing.back(),
-        duration: animation.speed.medium,
-      }),
-      Animated.timing(block.second, {
-        toValue: width,
-        easing: Easing.back(),
-        duration: animation.speed.medium,
-      }),
-      Animated.timing(block.first, {
-        toValue: width,
-        easing: Easing.back(),
-        duration: animation.speed.fast,
-      }),
-    ]).start()
+      Animated.parallel([
+        Animated.timing(button.width, {
+          toValue: 0,
+          duration: animation.speed.medium,
+          easing: Easing.linear(),
+        }),
+        Animated.timing(button.rotate, {
+          toValue: 0,
+          duration: animation.speed.medium,
+          easing: Easing.linear(),
+        }),
+      ]),
+      Animated.parallel([
+        Animated.spring(active, {
+          toValue: 0,
+          easing: Easing.back(),
+          duration: animation.speed.slow,
+        }),
+        Animated.timing(block.second, {
+          toValue: width,
+          easing: Easing.back(),
+          duration: animation.speed.fast,
+        }),
+      // ]),
+      // Animated.parallel([
+        Animated.timing(block.first, {
+          toValue: width,
+          easing: Easing.back(),
+          duration: animation.speed.fast,
+        }),
+        Animated.timing(button.color, {
+          toValue: 0,
+          duration: animation.speed.slow,
+          easing: Easing.linear(),
+        }),
+      ])
+    ])
+    .start()
   }
 
   getLinkActiveStyle({ active }) {
-    
-    let m = this.animatedMenu.active
-    // console.log()
-    let defaultStyle = {
-      height: 1.5,
+    return {
+      height: 1,
       position: 'absolute',
       bottom: 15,
       right: 0,
@@ -127,23 +171,20 @@ class Navigation extends Component {
       backgroundColor: '#eeeeee50',
       display: 'flex',
       alignSelf: 'flex-start',
-      width: active 
-        ? m.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }) 
-        : m.interpolate({ inputRange: [0, 0], outputRange: [0, 0] })
+      width: this.animatedMenu.active.interpolate({ 
+        inputRange: [0, 1], 
+        outputRange: [0, active && width / 2] 
+      }) 
     }
-    return defaultStyle
   }
 
   isActive({ title }) {
-    let result = (
-      this.state.open && (this.state.active === title)
-    ) && true
-    
-    return result 
+    return (this.state.active === title) && true
   }
 
   render() {
-    let { navigate } = this.state
+    const { navigate, active, open } = this.state
+    const { block, button } = this.animatedMenu
     let linkStyle = {
       display: 'flex',
       marginBottom: 20,
@@ -156,24 +197,63 @@ class Navigation extends Component {
     
     let menuStyle = [ menu, { 
       transform: [
-        { translateX: this.animatedMenu.block.first }
+        { translateX: block.first }
       ]
     }]
 
     let menuStyle2 = [ menu2, {
       transform: [
-        { translateX: this.animatedMenu.block.second }
+        { translateX: block.second }
       ]
     }]
+
+    let buttonLineStyle = ({ initialFill, rotateOnOpen }) => {
+      return [
+        buttonLine,
+        {
+          backgroundColor: button.color.interpolate({
+            inputRange: [0, 0.5, 1],
+            outputRange: ['#000',  '#999', '#fff']
+          }),
+          width: button.width.interpolate({
+            inputRange: [0, 1],
+            outputRange: [initialFill, 30]
+          }),
+          // top: '50%',
+          // marginTop: -25,
+          right: 15,
+          transform: [
+            {
+              rotateZ: button.rotate.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', `${rotateOnOpen}deg`],
+                
+              }),
+            },
+          ],
+          position: 'absolute'
+        },
+        !this.state.open && (initialFill <= 20) ? {
+          top: 26
+        } : { top: 18 },
+        this.state.open && { top: 22 },
+      ]
+    }
 
     return (  
       <Fragment>
         <Button
           onPress={this._toggleNavigation.bind(this, {
-            title: this.state.active
+            title: active
           })}>
-          <Line inverse={this.state.open} fill={100} />
-          <Line inverse={this.state.open} fill={70} />
+          <Animated.View style={buttonLineStyle({
+            initialFill: 35,
+            rotateOnOpen: -225
+          })}/>
+          <Animated.View style={buttonLineStyle({ 
+            initialFill: 20,
+            rotateOnOpen: 225
+          })}/>
         </Button>
         <Animated.View style={menuStyle}>
           <Link

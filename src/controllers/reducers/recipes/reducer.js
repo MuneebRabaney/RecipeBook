@@ -1,15 +1,17 @@
-import * as actions from '../../actions/'
-import { Rms, Themosis } from '../../../lib/api/'
+import { recipeActions } from '../../actions'
+import { Rms, Themosis } from '../../../lib/api'
 
 const initialState = {
-  state: {}
+  isLoading: true
 }
 
-const recipes = (state = initialState, { type, payload = async () => await payload }) => {
-  // console.log(payload)
+const recipes = (state = initialState, { type, payload }) => {
+  // console.log(recipeActions)
+  
+  
   if (typeof type !== 'undefined') {
     switch (type) {
-      case actions.FETCH_RECIPES:
+      case recipeActions.FETCH_RECIPES:
         return {
           ...state,
           payload,

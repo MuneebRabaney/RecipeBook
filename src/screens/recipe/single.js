@@ -21,7 +21,7 @@ import { recipeActions as action } from '../../controllers/actions'
 
 const Button = ({ title }) => {
   const Blueprint = styled.Text`
-    top: -23px;
+    top: -8px;
     left: 15px;
     width: 60px;
     align-self: flex-start;
@@ -53,6 +53,23 @@ class Recipe extends Component {
     }
   }
 
+ 
+  componentWillMount() {
+
+    let { id } = this.props.match.params
+    let { payload } = this.props.fetch.recipe({
+      route: 'recipes',
+      params: { id: parseInt(id) }
+    })
+    payload.then(result => {
+      let state = Object.assign({}, this.state)
+      state.data = result
+      state.isLoading = false
+      this.setState(state)
+    })
+    this._handleImageAnimation()
+  }
+
   _handleImageAnimation() {
     let { image, ingredient } = this.animation
     image.scale.setValue(0)
@@ -76,21 +93,6 @@ class Recipe extends Component {
         easing: Easing.back(),
       }),
     ]).start()
-  }
-
-  componentWillMount() {
-    let { id } = this.props.match.params
-    let { payload } = this.props.fetch.recipe({
-      route: 'recipes',
-      params: { id: parseInt(id) }
-    })
-    payload.then(result => {
-      let state = Object.assign({}, this.state)
-      state.data = result
-      state.isLoading = false
-      this.setState(state)
-    })
-    this._handleImageAnimation()
   }
 
   _layout({ data }) {
@@ -117,35 +119,34 @@ class Recipe extends Component {
             style={[
               { 
                 position: 'relative',
-                width: '100%',
+                width,
                 height: 250,  
                 zIndex: 1,  
-                marginBottom: -40,
-                top: -30,
+                marginBottom: 0,
+                top: -17,
                 transform: [
                   { scale: .1 }
                 ]
               }, { 
-                transform: [
-                  {
-                    translateY: image.top.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    }) 
-                  },
-                  {
-                    scale: image.scale.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    }), 
-                  },
-                  { perspective: 1000 }
-                ]
-              }
-            ]}
-            source={{ uri: `https:${cover_image.thumb_uri}` }} />
+                transform: [{
+                  translateY: image.top.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1]
+                  }) 
+                },{
+                  scale: image.scale.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1]
+                  }), 
+                },{ 
+                  perspective: 1000 
+                }
+              ]
+            }
+          ]}
+          source={{ uri: `https:${cover_image.thumb_uri}` }} />
         }
-        <View style={{ flex: 1, paddingTop: 20, paddingBottom: 20 }}>
+        <View style={{ flex: 1, paddingTop: 0, paddingBottom: 20 }}>
           <ScrollView style={{ flex: 1, padding: 20 }}>
             <View style={{ paddingBottom: 20 }}>
               <Text style={{
@@ -191,7 +192,6 @@ class Recipe extends Component {
                           ]}
                         />   
                       </Fragment>   
-                      
                     )}
                     sections={
                       ingredients.map(({ name, ingredient }) => ({
