@@ -6,20 +6,29 @@ const initialState = {
 }
 
 const recipes = (state = initialState, { type, payload }) => {
-  // console.log(recipeActions)
-  
-  
-  if (typeof type !== 'undefined') {
-    switch (type) {
-      case recipeActions.FETCH_RECIPES:
-        return {
-          ...state,
+  switch (type) {
+    // case recipeActions.FETCH_RECIPES_PENDING:
+    //   return {
+    //     ...state,
+    //     requesting: true,
+    //     isLoading: true
+    //   }
+    case recipeActions.FETCH_RECIPES_FULFILLED:
+      return {
+        ...state,
+        ...{
           payload,
           isLoading: false
         }
-      default:
-        return state
-    }
+      }
+    case recipeActions.CANCLED_FETCH_RECIPES:
+      return {
+        ...state,
+        isLoading: false,
+        terminateAllRequests: true,
+      }
+    default:
+      return state
   }
 }
 

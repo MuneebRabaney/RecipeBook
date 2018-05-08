@@ -1,3 +1,4 @@
+// import 'abortcontroller-polyfill'
 import Console from '../console-debug'
 /**
 * Factory base class for the API
@@ -45,7 +46,7 @@ class Api {
   *  
   * @return: Object
   **/
-  static async post({ route = null, params = {} }, { single } = false) {
+  static post({ route = null, params = {} }, { single } = false) {
     // Console.message({
     //   type: 'log',
     //   title: `Performing POST request ${params && 'with the below parameters'}`,
@@ -56,7 +57,7 @@ class Api {
       let {
         data,
         success
-      } = await this.request(route, { params }, { method: 'POST' }, single)
+      } = this.request(route, { params }, { method: 'POST' }, single)
       if (success) return data
     } catch (error) {
       // Console.message({
@@ -91,9 +92,7 @@ class Api {
     // This is for the RMS API but needs to have a cleaner solution
     if (single) endpoint = `${uri}/${params.id}`
     
-    let response = await fetch(endpoint, { ...this.headers, method })
-    let result = await response.json()
-    
+    let response = await fetch(endpoint, {...this.headers, method })
     // Console.message({
     //   type: 'log',
     //   title: 'Requested endpoint below',
@@ -105,7 +104,7 @@ class Api {
     //   result: result
     // })
 
-    return result
+    return response.json()
   }
   
   /**

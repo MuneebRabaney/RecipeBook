@@ -42,6 +42,7 @@ class Recipe extends Component {
 
   constructor(props) {
     super(props)
+    
     this.animation = {
       image: {
         top: new Animated.Value(0),
@@ -51,23 +52,49 @@ class Recipe extends Component {
         underline: new Animated.Value(0)
       }
     }
+    
   }
 
  
   componentWillMount() {
-
     let { id } = this.props.match.params
-    let { payload } = this.props.fetch.recipe({
+    this.props.fetch.recipe({
       route: 'recipes',
       params: { id: parseInt(id) }
     })
-    payload.then(result => {
-      let state = Object.assign({}, this.state)
-      state.data = result
-      state.isLoading = false
-      this.setState(state)
+    .then(async ({ value, action }) => {
+      if (action.type === 'FETCH_RECIPE_FULFILLED') {
+        let { recipes, limit, offset, total } = value
+        let state = Object.assign({}, this.state)
+        state.data = value
+        state.isLoading = false
+        // console.log(value)
+        let image = await React.createElement(Image, [{
+          source : { 
+            uri: `https:${value.cover_image.thumb_uri}`, cache: 'force-cache' 
+          }
+        }], null)
+        if (image) {
+          this.setState(state)
+        }
+        // console.log(image)
+        
+        // 
+      }
     })
+    
+    // let { payload } = this.props.fetch.recipe({
+    //   route: 'recipes',
+    //   params: { id: parseInt(id) }
+    // })
+    // payload.then(result => {
+    //   let state = Object.assign({}, this.state)
+    //   state.data = result
+    //   state.isLoading = false
+    //   this.setState(state)
+    // })
     this._handleImageAnimation()
+    
   }
 
   _handleImageAnimation() {
@@ -114,37 +141,38 @@ class Recipe extends Component {
           <Button title='&larr;' />
         </Link>
         {
-          cover_image.thumb_uri &&
-          <Animated.Image
-            style={[
-              { 
-                position: 'relative',
-                width,
-                height: 250,  
-                zIndex: 1,  
-                marginBottom: 0,
-                top: -17,
-                transform: [
-                  { scale: .1 }
+          cover_image.thumb_uri && (
+            <Animated.Image
+              style={[
+                { 
+                  position: 'relative',
+                  width,
+                  height: 250,  
+                  zIndex: 1,  
+                  marginBottom: 0,
+                  top: -17,
+                  transform: [
+                    { scale: .1 }
+                  ]
+                }, { 
+                  transform: [{
+                    translateY: image.top.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 1]
+                    }) 
+                  },{
+                    scale: image.scale.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 1]
+                    }), 
+                  },{ 
+                    perspective: 1000 
+                  }
                 ]
-              }, { 
-                transform: [{
-                  translateY: image.top.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1]
-                  }) 
-                },{
-                  scale: image.scale.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1]
-                  }), 
-                },{ 
-                  perspective: 1000 
-                }
-              ]
-            }
-          ]}
-          source={{ uri: `https:${cover_image.thumb_uri}` }} />
+              }
+            ]}
+            source={{ uri: `https:${cover_image.thumb_uri}`, cache: 'force-cache' }} />
+          )
         }
         <View style={{ flex: 1, paddingTop: 0, paddingBottom: 20 }}>
           <ScrollView style={{ flex: 1, padding: 20 }}>

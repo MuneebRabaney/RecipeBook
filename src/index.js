@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Navigation from './components/navigation'
-import { MemoryRouter as Router, Route, Link } from 'react-router-native'
+import { NativeRouter as Router, Route, Link } from 'react-router-native'
 import { 
   Home,
   Recipe,
@@ -9,12 +9,7 @@ import {
 
 class Main extends Component {
   
-  constructor(props) {
-    super(props)
-  }
-
   render() {
-    let { store } = this.props
     return (
       <Router>
         <Fragment>
@@ -26,6 +21,7 @@ class Main extends Component {
       </Router>
     )
   }
+
 }
 
 export default Main

@@ -57,17 +57,14 @@ class Navigation extends Component {
   }
   
   _toggleNavigation({ title }) {
-    let { props } = this
-    console.log(title)
     let { 
       payload 
-    } = !this.state.open ? props.open() : props.close()
+    } = !this.state.open ? this.props.open() : this.props.close()
     let state = Object.assign({}, this.state)
     state = {
       ...payload,
       active: title
     }
-    
     this.setState(state)
   }
 

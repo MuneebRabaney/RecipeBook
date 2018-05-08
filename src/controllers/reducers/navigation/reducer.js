@@ -9,13 +9,13 @@ const navigation = (state = initialState, { type, payload }) => {
     switch (type) {
       case actions.OPEN:
         return {
+          ...state,
           payload,
-          ...state
         }
       case actions.CLOSE:
         return {
+          ...state,
           payload,
-          ...state
         }
       default:
         return state

@@ -26,26 +26,23 @@ class Recipes extends Component {
   }
 
   componentDidMount() {
-    // if (this.props.state.payload) {
-    //   let { payload } = this.props.state
-    //   payload.then(({ recipes }) => {
-    //     console.log(recipes, this.state.data.recipes)
-    //   })
-    // }
-    let { payload } = this.props.fetch.recipes({
+    this.props.fetch.recipes({
       route: 'recipes',
       params: {
         limit: 15
       }
     })
-    payload.then(result => {
-      let { isLoading } = this.props.state
-      let state = Object.assign({}, this.state)
-      // let { isLoading } = this.props.recipes
-      // console.log(this.props.state)
-      state.isLoading = isLoading
-      state.data = result
-      this.setState(state)
+    .then(({ value, action }) => {
+      if (action.type === 'FETCH_RECIPES_FULFILLED') {
+        let { recipes, limit, offset, total } = value
+        let state = Object.assign({}, this.state)
+        state.data = recipes
+        state.total = total
+        state.limit = limit
+        state.offset = offset
+        state.isLoading = false
+        this.setState(state)
+      }
     })
 
     // this is just a test to see if 
@@ -69,11 +66,10 @@ class Recipes extends Component {
   }
 
   _layout(data) {
-    let { recipes } = data
     return (
       <View style={{ flex: 1, paddingTop: '20%', paddingBottom: 20 }}>
         <ScrollView style={{ flex: 1, padding: 20 }}> 
-          { recipes.map(({ id, title }, index) => (
+          { data.map(({ id, title }, index) => (
             <View key={index} style={{ paddingBottom: 20 }}>
               <Link
                 onPress={this._handleLinkOnClick.bind(this, id)} 
