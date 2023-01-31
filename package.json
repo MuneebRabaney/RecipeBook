@@ -2,40 +2,40 @@
   "name": "RecipeBook",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "jest-expo": "26.0.0",
-    "react-native-dotenv": "^0.1.1",
-    "react-native-scripts": "1.13.1",
-    "react-test-renderer": "16.3.0-alpha.1"
-  },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "react-native-scripts start",
-    "eject": "react-native-scripts eject",
-    "android": "react-native-scripts android",
-    "ios": "react-native-scripts ios",
+    "start": "expo start",
+    "eject": "expo eject",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
     "test": "jest",
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'"
   },
   "jest": {
     "preset": "jest-expo"
   },
+  "devDependencies": {
+    "jest-expo": "^47.0.1",
+    "react-native-dotenv": "^3.4.6",
+    "react-native-scripts": "^2.0.1",
+    "react-test-renderer": "^18.2.0"
+  },
   "dependencies": {
-    "chalk": "^2.4.1",
-    "expo": "^26.0.0",
-    "history": "^4.7.2",
-    "react": "16.3.0-alpha.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
-    "react-native-config": "^0.11.5",
-    "react-navigation": "^1.5.11",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
-    "react-router-native": "^4.2.0",
-    "react-router-redux": "^5.0.0-alpha.9",
-    "redux": "^3.7.2",
+    "chalk": "^5.2.0",
+    "expo": "^47.0.8",
+    "history": "^5.3.0",
+    "react": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-config": "^1.4.11",
+    "react-navigation": "^4.4.4",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.4.5",
+    "react-router-native": "^6.4.5",
+    "react-router-redux": "^4.0.8",
+    "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0",
-    "styled-components": "^3.2.5",
-    "superagent": "^3.8.3"
+    "redux-thunk": "^2.4.2",
+    "styled-components": "^5.3.6",
+    "superagent": "^8.0.6"
   }
 }

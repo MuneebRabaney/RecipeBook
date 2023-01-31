@@ -18,7 +18,7 @@ const Menu = styled.View`
   bottom: 0;
   ${({ menu }) => {
     switch (menu) {
-      case 'opened': 
+      case 'opened':
         return `right: 0;`
       default:
         return `right: 100%;`
@@ -43,17 +43,17 @@ const Line = styled.Text`
 `
 
 class Navigation extends Component {
-  
+
   state = {
     active: false
   }
 
   _toggleNavigation() {
     let state = Object.assign({}, this.state)
-    state.active = !this.state.active 
+    state.active = !this.state.active
     this.setState(state)
   }
-  
+
   render() {
     let { navigate } = this.state
     let linkStyle = {
@@ -68,14 +68,14 @@ class Navigation extends Component {
         </Button>
         <Menu
           menu={this.state.active ? 'opened' : 'closed'}>
-          <Link 
+          <Link
             to='/'
             underlayColor="transparent"
             style={linkStyle}
             onPress={this._toggleNavigation.bind(this)}>
             <Text>Home</Text>
           </Link>
-          <Link 
+          <Link
             to='/recipes'
             underlayColor="transparent"
             style={linkStyle}
@@ -86,7 +86,7 @@ class Navigation extends Component {
       </Fragment>
     )
   }
-  
+
 }
 
 function mapStateToProps(state) {

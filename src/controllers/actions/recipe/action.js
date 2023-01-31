@@ -7,9 +7,9 @@ export const FETCH_RECIPES_BY_CATEGORY = 'FETCH_RECIPES_BY_CATEGORY'
 
 /**
  * Fetch all recipes with given parameters
- * 
+ *
  * @args params | Object
- **/ 
+ **/
 export function fetchRecipes(params = {}) {
   let payload = Rms.get(params)
   return {
@@ -18,9 +18,9 @@ export function fetchRecipes(params = {}) {
   }
 }
 
-/**
+/** ,
  * Fetch recipe by ID
- * 
+ *
  * @args id | Integer
  **/
 export function fetchRecipe(id = null) {
@@ -33,7 +33,7 @@ export function fetchRecipe(id = null) {
 
 /**
  * Fetch recipes by category
- * 
+ *
  * @args Category | String
  **/
 export function fetchRecipeByCategory(category = null) {
